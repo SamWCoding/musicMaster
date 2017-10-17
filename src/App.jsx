@@ -15,7 +15,7 @@ class App extends Component {
     search() {
         const BASE_URL = 'https://api.spotify.com/v1/search?';
         const FETCH_URL = `${BASE_URL}q=${this.state.query}&type=artist&limit=1`;
-        var accessToken = "BQAB-4EnG7lFpg_xfC2P6NX__jE_wgIz3hsIDaLmLtJ39sdqx0lgeqTJALhgvWKeiUf2SgWeYhf6T8205l6PaA974mrsdFlC5l98C4-LtU5To9u77mmeG_0ys1fJOGUJjfQ891TcVgwigpNUsH7Exdqzh6V2kHboYSQgAPfLyaFLbQMy77Y&refresh_token=AQDG480fM3u_CyPXVDyvMXmt08iQTsMAGNqTkrA7zQa9Mhf1WC2D5oPnnO8WmooISHC7wSEpTyV4xYZfL2CZLEwPtFj1i33zeInBw-uTyR7g1XLB2HETPCILhSp0kcSLFTs";
+        var accessToken = "BQA8FtF-MaBCJwjfl95y5OMK89HChdcFUbo5qjenYktoklFv4YyyFYafeEzJPd8Q9LKVfBGLwUalVbGQJSlVCT6iexQd349igXSFD3XTdD2CDU7bfawQBWNEJ-mVC9NJ_esvqLZnSOk2cZcZ51vgBO5BjKat54R7KpR2DDyTtrgImo4ERPI&refresh_token=AQDcrh56IaSbMVwEK70Fto3HXMUfzKJHUK7ofQfwzR4CEced8p9HGHr6UKyoLtydqE6RmyzM5ecX2_FGAlepfsOFKzo-uVYUT0PH-mH5TnnD0IYLlSk8PircSF5b0FTEg54";
 
         var myOptions = {
             method: 'GET',
@@ -29,6 +29,7 @@ class App extends Component {
         fetch(FETCH_URL, myOptions)
             .then(response => response.json())
             .then(json => {
+                console.log(json);
                 const artist = json.artists.items[0];
                 this.setState({artist});
             });
@@ -36,8 +37,8 @@ class App extends Component {
 
     render() {
         return (
-            <div className="App">
-                <div className="App-title">Music Master</div>
+            <div className="app">
+                <div className="app_title">Music Master</div>
                 <FormGroup>
                     <InputGroup>
                         <FormControl 
@@ -59,7 +60,7 @@ class App extends Component {
                 <Profile 
                     artist={this.state.artist}
                 />
-                <div className="Gallery">
+                <div className="gallery">
                     Gallery
                 </div>
             </div>
