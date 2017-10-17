@@ -2,20 +2,23 @@ import React, { Component } from 'react';
 import './App.css';
 import { FormGroup, FormControl, InputGroup, Glyphicon } from 'react-bootstrap';
 import Profile from './Profile';
+import Gallery from './Gallery';
 
 class App extends Component {
     constructor(props) {
         super(props)
         this.state = {
             query: "",
-            artist: null
+            artist: null,
+            tracks: []
         }
     }
 
     search() {
         const BASE_URL = 'https://api.spotify.com/v1/search?';
-        const FETCH_URL = `${BASE_URL}q=${this.state.query}&type=artist&limit=1`;
-        var accessToken = "BQA8FtF-MaBCJwjfl95y5OMK89HChdcFUbo5qjenYktoklFv4YyyFYafeEzJPd8Q9LKVfBGLwUalVbGQJSlVCT6iexQd349igXSFD3XTdD2CDU7bfawQBWNEJ-mVC9NJ_esvqLZnSOk2cZcZ51vgBO5BjKat54R7KpR2DDyTtrgImo4ERPI&refresh_token=AQDcrh56IaSbMVwEK70Fto3HXMUfzKJHUK7ofQfwzR4CEced8p9HGHr6UKyoLtydqE6RmyzM5ecX2_FGAlepfsOFKzo-uVYUT0PH-mH5TnnD0IYLlSk8PircSF5b0FTEg54";
+        let FETCH_URL = `${BASE_URL}q=${this.state.query}&type=artist&limit=1`;
+        const TRACKS_URL = 'https://api.spotify.com/v1/artists/';
+        var accessToken = "BQCAzdlrQOCpERhtdUi8s3IgBE6tCzWhm9Uilwzuyre2pFVHuQ3zJwK0yFoAVzPqS4cfQkqdQz4jxQ8aQFxS8zPr6MA19F1lsLlVdqTDC1pJpUyl9_d5g__6ssDeOvYBAnWhllXWymxECP0yFJHyMGDxKnfO5itLy0cIRyixhMPwU-5TSck&refresh_token=AQBfCTcLkW-FPPuCuuVwHBupdGVGz7Sg3jj9DGVmxJgYZXQSNtp_hoL5NG21YloiI911108tcAzFcqx9qdv-qKMjM65sFy8971qoC7M1j2C0MyqrcrhT9gIj-4V6N7KWkYU";
 
         var myOptions = {
             method: 'GET',
@@ -32,7 +35,14 @@ class App extends Component {
                 console.log(json);
                 const artist = json.artists.items[0];
                 this.setState({artist});
-            });
+                FETCH_URL = `${TRACKS_URL}${artist.id}/top-tracks?country=US&`;
+                fetch(FETCH_URL, myOptions)
+                    .then(response => response.json())
+                    .then(json => {
+                        const { tracks } = json;
+                        this.setState({tracks});
+                    })
+            })
     }
 
     render() {
@@ -57,12 +67,18 @@ class App extends Component {
                         </InputGroup.Addon>
                     </InputGroup>
                 </FormGroup>
-                <Profile 
-                    artist={this.state.artist}
-                />
-                <div className="gallery">
-                    Gallery
-                </div>
+                {
+                    this.state.artist !== null 
+                    ? <div>
+                        <Profile 
+                            artist={this.state.artist}
+                        />
+                        <Gallery
+                            tracks={this.state.tracks}
+                        />
+                    </div>
+                    : <div></div>
+                }
             </div>
         )
     }
